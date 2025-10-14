@@ -14,10 +14,10 @@ class GenerateEverythingJob < ApplicationJob
   end
 
   def seed_couriers
-    rand(0..1).times { User.create(kind: :courier) }
+    rand(1..2).times { User.create(kind: :courier) }
   end
 
   def seed_orders
-    rand(10..20).times { Order.create(amount: rand(100..5000)) }
+    rand(40..90).times { Order.create(amount: rand(100..5000)) }
   end
 end
