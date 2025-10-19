@@ -5,7 +5,7 @@ class HelloController < ApplicationController
   end
 
   def refresh_online
-    users_online_count = rand(100..1000)
+    users_online_count = params['manual_count'].presence || rand(100..1000)
     Yabeda.top_shop.user_online.set({}, users_online_count)
     render plain: "#{users_online_count} users online now"
   end

@@ -14,6 +14,9 @@ services:
     environment:
       RAILS_ENV: development
       RAILS_DEVELOPMENT_HOSTS: .web
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redis
 
   prometheus:
     image: prom/prometheus:latest
@@ -21,6 +24,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -29,6 +33,7 @@ services:
       - '--web.console.templates=/usr/share/prometheus/consoles'
     depends_on:
       - web
+      - alertmanager
 
   grafana:
     image: grafana/grafana:latest
@@ -56,7 +61,28 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
 
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
 volumes:
   bundle_cache:
   prometheus_data:
   grafana_data:
+  alertmanager_data:
+  redis_data:

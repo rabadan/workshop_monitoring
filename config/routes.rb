@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   mount Yabeda::Prometheus::Exporter, at: "/metrics"
+  mount(
+    Rack::Auth::Basic.new(Logster::Web) do |username, password|
+      username == ENV.fetch('LOGSTER_USERNAME', 'admin') &&
+        password == ENV.fetch('LOGSTER_PASSWORD', 'admin')
+    end,
+    at: "/logs"
+  )
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

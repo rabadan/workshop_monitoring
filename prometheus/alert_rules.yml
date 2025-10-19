@@ -1,0 +1,20 @@
+groups:
+  - name: business_alerts
+    interval: 30s
+    rules:
+      - alert: LowUserActivity
+        expr: top_shop_user_online < 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Слишком мало онлайн пользователей (меньше 10)"
+
+      - alert: NoOrdersPlaced
+        expr: sum(increase(top_shop_orders_placed[1m])) == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Ни одного заказа за 1 минуту"
+

@@ -19,6 +19,9 @@ gem "jbuilder"
 
 gem "yabeda-rails"
 gem "yabeda-prometheus"
+gem "lograge"
+gem "redis"
+gem "logster"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
